@@ -24,7 +24,16 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-local FontObj = Font.fromEnum(Enum.Font.SourceSans);
+if not isfile('tahoma.ttf') then
+    pcall(writefile, 'tahoma.ttf', game:HttpGet('https://github.com/libertyforce/tahoma-ttf/raw/master/tahoma.ttf'))
+end
+
+local FontObj;
+if isfile('tahoma.ttf') then
+    FontObj = Font.new(getcustomasset('tahoma.ttf'));
+else
+    FontObj = Font.fromEnum(Enum.Font.Tahoma);
+end
 
 local Library = {
     Toggled = false;
@@ -3210,7 +3219,6 @@ function Library:CreateWindow(...)
     local TabListLayout = Library:Create('UIListLayout', {
         Padding = UDim.new(0, Config.TabPadding);
         FillDirection = Enum.FillDirection.Horizontal;
-        HorizontalFlex = Enum.UIFlexAlignment.Fill;
         SortOrder = Enum.SortOrder.LayoutOrder;
         Parent = TabArea;
     });
