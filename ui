@@ -365,8 +365,24 @@ function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
         return Bounds.X, Bounds.Y;
     end
 
-    local FallbackFont = typeof(FontEnum) == 'EnumItem' and FontEnum or Enum.Font.BuilderSans;
-    local FallbackBounds = TextService:GetTextSize(Text, Size or 12, FallbackFont, Resolution or Vector2.new(math.huge, math.huge));
+    local success2, result = pcall(function()
+        local label = Instance.new('TextLabel')
+        label.Text = Text
+        label.RichText = true
+        label.TextSize = Size or 12
+        label.FontFace = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum
+        label.Size = UDim2.fromOffset(99999, 99999)
+        label.Parent = ScreenGui
+        local bounds = label.TextBounds
+        label:Destroy()
+        return bounds
+    end)
+
+    if success2 and result then
+        return result.X, result.Y;
+    end
+
+    local FallbackBounds = TextService:GetTextSize(Text, Size or 12, Enum.Font.BuilderSans, Resolution or Vector2.new(math.huge, math.huge));
     return FallbackBounds.X, FallbackBounds.Y;
 end;
 
