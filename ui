@@ -24,6 +24,17 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
+if not isfile('tahoma.ttf') then
+    pcall(writefile, 'tahoma.ttf', game:HttpGet('https://github.com/libertyforce/tahoma-ttf/raw/master/tahoma.ttf'))
+end
+
+local FontObj;
+if isfile('tahoma.ttf') then
+    FontObj = Font.new(getcustomasset('tahoma.ttf'));
+else
+    FontObj = Font.fromEnum(Enum.Font.Tahoma);
+end
+
 local Library = {
     Toggled = false;
 
@@ -40,7 +51,7 @@ local Library = {
     RiskColor = Color3.fromRGB(255, 166, 50),
 
     Black = Color3.new(0, 0, 0);
-    Font = Font.fromEnum(Enum.Font.SourceSans),
+    Font = FontObj,
 
     OpenedFrames = {};
     DependencyBoxes = {};
@@ -3149,8 +3160,8 @@ function Library:CreateWindow(...)
     });
 
     local WindowLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 7, 0, 0);
-        Size = UDim2.new(0, 0, 0, 25);
+        Position = UDim2.new(0, 0, 0, 0);
+        Size = UDim2.new(1, 0, 0, 25);
         Text = Config.Title or 'Unnamed Cheat';
         TextXAlignment = Enum.TextXAlignment.Center;
         ZIndex = 1;
