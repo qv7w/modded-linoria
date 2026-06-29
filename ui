@@ -24,16 +24,7 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-if not isfile('tahoma.ttf') then
-    pcall(writefile, 'tahoma.ttf', game:HttpGet('https://github.com/libertyforce/tahoma-ttf/raw/master/tahoma.ttf'))
-end
-
-local FontObj;
-if isfile('tahoma.ttf') then
-    FontObj = Font.new(getcustomasset('tahoma.ttf'));
-else
-    FontObj = Font.fromEnum(Enum.Font.Tahoma);
-end
+local FontObj = Font.fromEnum(Enum.Font.Tahoma);
 
 local Library = {
     Toggled = false;
