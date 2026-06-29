@@ -24,7 +24,7 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-local FontObj = Font.fromEnum(Enum.Font.SourceSans);
+local FontObj = Enum.Font.SourceSans;
 
 local Library = {
     Toggled = false;
@@ -150,7 +150,7 @@ end;
 function Library:CreateLabel(Properties, IsHud)
     local _Instance = Library:Create('TextLabel', {
         BackgroundTransparency = 1;
-        FontFace = Library.Font;
+        Font = Library.Font;
         TextColor3 = Library.FontColor;
         TextSize = 12;
         TextStrokeTransparency = 0;
@@ -634,7 +634,7 @@ do
             BackgroundTransparency = 1;
             Position = UDim2.new(0, 5, 0, 0);
             Size = UDim2.new(1, -5, 1, 0);
-            FontFace = Library.Font;
+            Font = Library.Font;
             PlaceholderColor3 = Color3.fromRGB(190, 190, 190);
             PlaceholderText = 'Hex color',
             Text = '#FFFFFF',
@@ -1772,7 +1772,7 @@ do
             Position = UDim2.fromOffset(0, 0),
             Size = UDim2.fromScale(5, 1),
 
-            FontFace = Library.Font;
+            Font = Library.Font;
             PlaceholderColor3 = Color3.fromRGB(190, 190, 190);
             PlaceholderText = Info.Placeholder or '';
 
@@ -1837,7 +1837,7 @@ do
                     -- calculate pixel width of text from start to cursor
                     local subtext = string.sub(Box.Text, 1, cursor-1)
                     local width;
-                    width = Library:GetTextBounds(subtext, Box.FontFace);
+                    width = Library:GetTextBounds(subtext, Box.Font);
 
                     -- check if we're inside the box with the cursor
                     local currentCursorPos = Box.Position.X.Offset + width
