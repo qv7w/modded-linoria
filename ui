@@ -24,7 +24,22 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-local FontObj = Font.fromEnum(Enum.Font.Tahoma);
+local FontObj;
+do
+    local fontLoaded = false
+    pcall(function()
+        if not isfile('tahoma.ttf') then
+            writefile('tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/refs/heads/main/tahoma.ttf'))
+        end
+        if isfile('tahoma.ttf') then
+            FontObj = Font.new(getcustomasset('tahoma.ttf'))
+            fontLoaded = true
+        end
+    end)
+    if not fontLoaded then
+        FontObj = Font.fromEnum(Enum.Font.Code)
+    end
+end
 
 local Library = {
     Toggled = false;
@@ -350,7 +365,7 @@ function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
         return Bounds.X, Bounds.Y;
     end
 
-    local FallbackFont = typeof(FontEnum) == 'EnumItem' and FontEnum or Enum.Font.Tahoma;
+    local FallbackFont = typeof(FontEnum) == 'EnumItem' and FontEnum or Enum.Font.Code;
     local FallbackBounds = TextService:GetTextSize(Text, Size or 12, FallbackFont, Resolution or Vector2.new(math.huge, math.huge));
     return FallbackBounds.X, FallbackBounds.Y;
 end;
