@@ -28,8 +28,12 @@ local FontObj;
 do
     local fontLoaded = false
     pcall(function()
-        if not isfile('tahoma.ttf') then
-            writefile('tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/refs/heads/main/tahoma.ttf'))
+        local needDownload = not isfile('tahoma.ttf')
+        if not needDownload and readfile and #readfile('tahoma.ttf') < 1000 then
+            needDownload = true
+        end
+        if needDownload then
+            writefile('tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf'))
         end
         if isfile('tahoma.ttf') then
             FontObj = Font.new(getcustomasset('tahoma.ttf'))
@@ -37,7 +41,7 @@ do
         end
     end)
     if not fontLoaded then
-        FontObj = Font.fromEnum(Enum.Font.BuilderSans)
+        FontObj = Font.fromEnum(Enum.Font.Arial)
     end
 end
 
@@ -350,56 +354,29 @@ function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
     return (1 - ((Value - MinA) / (MaxA - MinA))) * MinB + ((Value - MinA) / (MaxA - MinA)) * MaxB;
 end;
 
-do
-    local MeasureFont = nil;
-    local function findMeasureFont(CustomFont)
-        if MeasureFont then return MeasureFont end
-        local candidates = {
-            CustomFont,
-            pcall(Font.new, 'rbxasset://fonts/families/Tahoma.json') and Font.new('rbxasset://fonts/families/Tahoma.json') or nil,
-            pcall(Font.new, 'rbxasset://fonts/families/Arial.json') and Font.new('rbxasset://fonts/families/Arial.json') or nil,
-            pcall(Font.new, 'rbxasset://fonts/families/LegacyArial.json') and Font.new('rbxasset://fonts/families/LegacyArial.json') or nil,
-        }
-        for _, font in ipairs(candidates) do
-            if font then
-                local ok = pcall(function()
-                    local p = Instance.new('GetTextBoundsParams')
-                    p.Text = 'test'
-                    p.Font = font
-                    p.Size = 12
-                    TextService:GetTextBoundsAsync(p)
-                end)
-                if ok then
-                    MeasureFont = font
-                    return font
-                end
-            end
-        end
-        return nil
+function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
+    local FontToUse = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
+    if not FontToUse then
+        FontToUse = FontObj
     end
 
-    function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
-        local FontToUse = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
-        local measureFont = findMeasureFont(FontToUse)
-
-        if measureFont then
-            local success, Bounds = pcall(function()
-                local BoundParams = Instance.new('GetTextBoundsParams') do
-                    BoundParams.RichText = true;
-                    BoundParams.Text = Text;
-                    BoundParams.Font = measureFont;
-                    BoundParams.Size = Size or 12;
-                end
-                return TextService:GetTextBoundsAsync(BoundParams);
-            end)
-            if success then
-                return Bounds.X, Bounds.Y;
-            end
+    local success, Bounds = pcall(function()
+        local BoundParams = Instance.new('GetTextBoundsParams') do
+            BoundParams.RichText = true;
+            BoundParams.Text = Text;
+            BoundParams.Font = FontToUse;
+            BoundParams.Size = Size or 12;
         end
+        return TextService:GetTextBoundsAsync(BoundParams);
+    end)
 
-        local FallbackBounds = TextService:GetTextSize(Text, Size or 12, Enum.Font.BuilderSans, Resolution or Vector2.new(math.huge, math.huge));
-        return FallbackBounds.X, FallbackBounds.Y;
-    end;
+    if success then
+        return Bounds.X, Bounds.Y;
+    end
+
+    -- Fallback to Arial (very similar character width to Tahoma)
+    local FallbackBounds = TextService:GetTextSize(Text, Size or 12, Enum.Font.Arial, Resolution or Vector2.new(math.huge, math.huge));
+    return FallbackBounds.X, FallbackBounds.Y;
 end;
 
 function Library:GetDarkerColor(Color)
