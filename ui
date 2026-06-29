@@ -24,22 +24,7 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-local FontObj;
-do
-    local fontLoaded = false
-    pcall(function()
-        if not isfile('ccphook_tahoma.ttf') then
-            writefile('ccphook_tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf?t=' .. os.time()))
-        end
-        if isfile('ccphook_tahoma.ttf') then
-            FontObj = Font.new(getcustomasset('ccphook_tahoma.ttf'))
-            fontLoaded = true
-        end
-    end)
-    if not fontLoaded then
-        FontObj = Font.fromEnum(Enum.Font.Arial)
-    end
-end
+local FontObj = Font.fromEnum(Enum.Font.Tahoma);
 
 local Library = {
     Toggled = false;
@@ -235,7 +220,7 @@ function Library:MakeDraggable(Instance, Cutoff)
 end;
 
 function Library:AddToolTip(InfoStr, HoverInstance)
-    local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 12);
+    local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
     local Tooltip = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor,
         BorderColor3 = Library.OutlineColor,
@@ -351,28 +336,15 @@ function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
 end;
 
 function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
-    local FontToUse = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
-    if not FontToUse then
-        FontToUse = FontObj
+    local BoundParams = Instance.new('GetTextBoundsParams') do
+        BoundParams.RichText = true;
+        BoundParams.Text = Text;
+        BoundParams.Font = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
+        BoundParams.Size = 12;
     end
 
-    local success, Bounds = pcall(function()
-        local BoundParams = Instance.new('GetTextBoundsParams') do
-            BoundParams.RichText = true;
-            BoundParams.Text = Text;
-            BoundParams.Font = FontToUse;
-            BoundParams.Size = Size or 12;
-        end
-        return TextService:GetTextBoundsAsync(BoundParams);
-    end)
-
-    if success then
-        return Bounds.X, Bounds.Y;
-    end
-
-    -- Fallback to Arial (very similar character width to Tahoma)
-    local FallbackBounds = TextService:GetTextSize(Text, Size or 12, Enum.Font.Arial, Resolution or Vector2.new(math.huge, math.huge));
-    return FallbackBounds.X, FallbackBounds.Y;
+    local Bounds = TextService:GetTextBoundsAsync(BoundParams);
+    return Bounds.X, Bounds.Y;
 end;
 
 function Library:GetDarkerColor(Color)
@@ -2956,14 +2928,15 @@ function Library:SetWatermarkVisibility(Bool)
 end;
 
 function Library:SetWatermark(Text)
-    local X, Y = Library:GetTextBounds(Text, Library.Font, 12);
+    local X, Y = Library:GetTextBounds(Text, Library.Font, 14);
     Library.Watermark.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3);
+    Library:SetWatermarkVisibility(true)
 
     Library.WatermarkText.Text = Text;
 end;
 
 function Library:Notify(Text, Time)
-    local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 12);
+    local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
 
     YSize = YSize + 7
 
@@ -3178,8 +3151,8 @@ function Library:CreateWindow(...)
     });
 
     local WindowLabel = Library:CreateLabel({
-        Position = UDim2.new(0, 0, 0, 0);
-        Size = UDim2.new(1, 0, 0, 25);
+        Position = UDim2.new(0, 7, 0, 0);
+        Size = UDim2.new(0, 0, 0, 25);
         Text = Config.Title or 'Unnamed Cheat';
         TextXAlignment = Enum.TextXAlignment.Center;
         ZIndex = 1;
@@ -3281,7 +3254,7 @@ function Library:CreateWindow(...)
             Tabboxes = {};
         };
 
-        local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 12);
+        local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
 
         local TabButton = Library:Create('Frame', {
             BackgroundColor3 = Library.BackgroundColor;
