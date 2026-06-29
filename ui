@@ -27,7 +27,7 @@ getgenv().Options = Options;
 local rawGithubFontUrl = "https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf"
 if not isfile("tahoma.ttf") then
     pcall(function()
-        writefile("tahoma.ttf", game:HttpGet(rawGithubGithubUrl or rawGithubFontUrl))
+        writefile("tahoma.ttf", game:HttpGet(rawGithubFontUrl))
     end)
 end
 
@@ -35,7 +35,9 @@ local FontObj;
 local hasCustomAsset, customAsset = pcall(getcustomasset, "tahoma.ttf")
 if hasCustomAsset and isfile("tahoma.ttf") then
     pcall(function()
-        FontObj = Font.new(customAsset)
+        local font_json = '{\n  "name": "Tahoma",\n  "faces": [\n    {\n      "name": "Regular",\n      "weight": 400,\n      "style": "normal",\n      "assetId": "' .. customAsset .. '"\n    }\n  ]\n}'
+        writefile("tahoma.font", font_json)
+        FontObj = Font.new(getcustomasset("tahoma.font"))
     end)
 end
 
@@ -360,8 +362,17 @@ function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
         BoundParams.Size = 12;
     end
 
-    local Bounds = TextService:GetTextBoundsAsync(BoundParams);
-    return Bounds.X, Bounds.Y;
+    local success, Bounds = pcall(TextService.GetTextBoundsAsync, TextService, BoundParams);
+    if success and Bounds then
+        return Bounds.X, Bounds.Y;
+    end;
+
+    BoundParams.Font = Font.fromEnum(Enum.Font.SourceSans);
+    local _, FallbackBounds = pcall(TextService.GetTextBoundsAsync, TextService, BoundParams);
+    if FallbackBounds then
+        return FallbackBounds.X, FallbackBounds.Y;
+    end;
+    return #Text * 8, 14;
 end;
 
 function Library:GetDarkerColor(Color)
