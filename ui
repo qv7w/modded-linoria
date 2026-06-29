@@ -24,26 +24,7 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
-local rawGithubFontUrl = "https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf"
-if not isfile("tahoma.ttf") then
-    pcall(function()
-        writefile("tahoma.ttf", game:HttpGet(rawGithubFontUrl))
-    end)
-end
-
-local FontObj;
-local hasCustomAsset, customAsset = pcall(getcustomasset, "tahoma.ttf")
-if hasCustomAsset and isfile("tahoma.ttf") then
-    pcall(function()
-        local font_json = '{\n  "name": "Tahoma",\n  "faces": [\n    {\n      "name": "Regular",\n      "weight": 400,\n      "style": "normal",\n      "assetId": "' .. customAsset .. '"\n    }\n  ]\n}'
-        writefile("tahoma.font", font_json)
-        FontObj = Font.new(getcustomasset("tahoma.font"))
-    end)
-end
-
-if not FontObj then
-    FontObj = Font.fromEnum(Enum.Font.SourceSans)
-end
+local FontObj = Font.fromEnum(Enum.Font.SourceSans);
 
 local Library = {
     Toggled = false;
