@@ -28,15 +28,11 @@ local FontObj;
 do
     local fontLoaded = false
     pcall(function()
-        local needDownload = not isfile('tahoma.ttf')
-        if not needDownload and readfile and #readfile('tahoma.ttf') < 1000 then
-            needDownload = true
+        if not isfile('ccphook_tahoma.ttf') then
+            writefile('ccphook_tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf?t=' .. os.time()))
         end
-        if needDownload then
-            writefile('tahoma.ttf', game:HttpGet('https://raw.githubusercontent.com/qv7w/modded-linoria/main/tahoma.ttf'))
-        end
-        if isfile('tahoma.ttf') then
-            FontObj = Font.new(getcustomasset('tahoma.ttf'))
+        if isfile('ccphook_tahoma.ttf') then
+            FontObj = Font.new(getcustomasset('ccphook_tahoma.ttf'))
             fontLoaded = true
         end
     end)
