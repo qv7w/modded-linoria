@@ -336,15 +336,23 @@ function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
 end;
 
 function Library:GetTextBounds(Text, FontEnum, Size, Resolution)
-    local BoundParams = Instance.new('GetTextBoundsParams') do
-        BoundParams.RichText = true;
-        BoundParams.Text = Text;
-        BoundParams.Font = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
-        BoundParams.Size = 12;
+    local success, Bounds = pcall(function()
+        local BoundParams = Instance.new('GetTextBoundsParams') do
+            BoundParams.RichText = true;
+            BoundParams.Text = Text;
+            BoundParams.Font = typeof(FontEnum) == 'EnumItem' and Font.fromEnum(FontEnum) or FontEnum;
+            BoundParams.Size = Size or 12;
+        end
+        return TextService:GetTextBoundsAsync(BoundParams);
+    end)
+
+    if success then
+        return Bounds.X, Bounds.Y;
     end
 
-    local Bounds = TextService:GetTextBoundsAsync(BoundParams);
-    return Bounds.X, Bounds.Y;
+    local FallbackFont = typeof(FontEnum) == 'EnumItem' and FontEnum or Enum.Font.Tahoma;
+    local FallbackBounds = TextService:GetTextSize(Text, Size or 12, FallbackFont, Resolution or Vector2.new(math.huge, math.huge));
+    return FallbackBounds.X, FallbackBounds.Y;
 end;
 
 function Library:GetDarkerColor(Color)
