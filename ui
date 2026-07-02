@@ -2785,7 +2785,7 @@ do
         Parent = WatermarkOuter;
         ScaleType = Enum.ScaleType.Slice;
         SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
-        ImageTransparency = 0.5;
+        ImageTransparency = 0.8;
         ImageColor3 = Library.AccentColor;
     });
 
@@ -2885,7 +2885,7 @@ do
         Parent = KeybindOuter;
         ScaleType = Enum.ScaleType.Slice;
         SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
-        ImageTransparency = 0.5;
+        ImageTransparency = 0.8;
         ImageColor3 = Library.AccentColor;
     });
 
@@ -3876,11 +3876,6 @@ Players.PlayerAdded:Connect(OnPlayerChange);
 Players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
-
-pcall(function()
-    print("[AuraHook Glow Mod] Custom UI library with glow effect loaded successfully!")
-    Library:Notify("Custom UI Library loaded!", 5)
-end)
 
 -- literally just to pass detections
 return Library, Toggles, Options
