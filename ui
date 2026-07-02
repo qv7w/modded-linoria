@@ -2793,6 +2793,8 @@ do
         ImageColor3 = 'AccentColor';
     });
 
+    print("Watermark glow transparency initialized: " .. tostring(WatermarkGlow.ImageTransparency))
+
     local WatermarkInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.OutlineColor;
@@ -2892,6 +2894,8 @@ do
     Library:AddToRegistry(KeybindGlow, {
         ImageColor3 = 'AccentColor';
     }, true);
+
+    print("Keybind glow transparency initialized: " .. tostring(KeybindGlow.ImageTransparency))
 
     local KeybindInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
