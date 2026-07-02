@@ -2785,7 +2785,7 @@ do
         Parent = WatermarkOuter;
         ScaleType = Enum.ScaleType.Slice;
         SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
-        ImageTransparency = 0.95;
+        ImageTransparency = 0.85;
         ImageColor3 = Library.AccentColor;
     });
 
@@ -2885,7 +2885,7 @@ do
         Parent = KeybindOuter;
         ScaleType = Enum.ScaleType.Slice;
         SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
-        ImageTransparency = 0.95;
+        ImageTransparency = 0.85;
         ImageColor3 = Library.AccentColor;
     });
 
