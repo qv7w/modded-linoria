@@ -2769,6 +2769,27 @@ do
         ZIndex = 200;
         Visible = false;
         Parent = ScreenGui;
+        ClipsDescendants = false;
+    });
+
+    local WatermarkGlow = Library:Create('ImageLabel', {
+        AnchorPoint = Vector2.new(0.5, 0.5);
+        Position = UDim2.fromScale(0.5, 0.5);
+        Size = UDim2.new(1, 40, 1, 40);
+        Image = 'rbxassetid://18245826428';
+        ZIndex = 200;
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Visible = true;
+        Parent = WatermarkOuter;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ImageTransparency = 0.8;
+        ImageColor3 = Library.AccentColor;
+    });
+
+    Library:AddToRegistry(WatermarkGlow, {
+        ImageColor3 = 'AccentColor';
     });
 
     local WatermarkInner = Library:Create('Frame', {
@@ -2849,6 +2870,26 @@ do
         Parent = ScreenGui;
         ClipsDescendants = false;
     });
+
+    local KeybindGlow = Library:Create('ImageLabel', {
+        AnchorPoint = Vector2.new(0.5, 0.5);
+        Position = UDim2.fromScale(0.5, 0.5);
+        Size = UDim2.new(1, 40, 1, 40);
+        Image = 'rbxassetid://18245826428';
+        ZIndex = 100;
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Visible = true;
+        Parent = KeybindOuter;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ImageTransparency = 0.8;
+        ImageColor3 = Library.AccentColor;
+    });
+
+    Library:AddToRegistry(KeybindGlow, {
+        ImageColor3 = 'AccentColor';
+    }, true);
 
     local KeybindInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
